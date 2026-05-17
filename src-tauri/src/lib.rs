@@ -1,3 +1,8 @@
+#[tauri::command]
+async fn sync_address(address: String) -> Result<esplora_client::AddressData, String> {
+    esplora_client::sync(&address).await
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
   tauri::Builder::default()
@@ -11,6 +16,7 @@ pub fn run() {
       }
       Ok(())
     })
+    .invoke_handler(tauri::generate_handler![sync_address])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
